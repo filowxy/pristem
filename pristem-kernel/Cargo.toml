@@ -1,0 +1,50 @@
+# pristem-kernel — resident agent service, Rust core.
+#
+# Foundation scaffold (v0.3, NOT FINAL). Crate layout and dependency direction follow
+# pristem-kernel-foundation-v0.3.md §3:
+#
+#   defense ──┬── harness ──┐
+#   plugin ───┼── provider ─┼── core ── ipc ── cli
+#             ├── deepsleep ┤
+#             └── advisor ──┘
+#
+# `ipc` knows `core`; nothing knows `ipc` back. `core` depends on the five service
+# crates; none of them depend on `core`. There are no cycles anywhere in the graph.
+#
+# [CHURN] wire protocol / status-line vocabulary / edit ladder / REMINDER semantics
+# are isolated behind traits so they can be swapped without re-architecture.
+# See crates/pristem-harness/src/protocol.rs and crates/pristem-ipc/src/events.rs.
+
+[workspace]
+resolver = "2"
+members = ["crates/*", "bench"]
+
+[workspace.package]
+version = "0.3.0"
+edition = "2021"
+rust-version = "1.75"
+publish = false
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+regex = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "sync", "macros", "time", "process", "io-util", "fs"] }
+clap = { version = "4", features = ["derive"] }
+criterion = "0.5"
+
+pristem-defense = { path = "crates/pristem-defense" }
+pristem-plugin = { path = "crates/pristem-plugin" }
+pristem-provider = { path = "crates/pristem-provider" }
+pristem-harness = { path = "crates/pristem-harness" }
+pristem-deepsleep = { path = "crates/pristem-deepsleep" }
+pristem-advisor = { path = "crates/pristem-advisor" }
+pristem-core = { path = "crates/pristem-core" }
+pristem-ipc = { path = "crates/pristem-ipc" }
+
+[profile.release]
+opt-level = 2
+lto = "thin"
+codegen-units = 4
+strip = true

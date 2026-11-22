@@ -1,0 +1,5 @@
+# The gnullvm host links with rust-lld (see ~/.cargo/config.toml). One sysroot
+# import library is missing; scripts/gen-advapi32-import.sh generates it locally.
+# Keeping the -L inside the project avoids modifying the user's Rust toolchain.
+[target.x86_64-pc-windows-gnullvm]
+rustflags = ["-L", "native=D:/projects/pristem/pristem-desktop/shell/native-lib"]

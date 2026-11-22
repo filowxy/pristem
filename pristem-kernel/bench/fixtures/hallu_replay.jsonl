@@ -1,0 +1,3 @@
+{"id":"HR-1","messages":["AGENTS.md version 0.3.0 loaded","sig JB-001 fired, verdict: intercept","long middle filler one","long middle filler two","final answer uses id AC-003 and verdict: allow"],"must_preserve":["0.3.0","JB-001","AC-003","verdict: intercept","verdict: allow"]}
+{"id":"HR-2","messages":["kernel v0.3.1 hot-updated sigdb","PS-001 verdict: intercept","middle noise","call status unknown-tool recorded","done verdict: deny"],"must_preserve":["0.3.1","PS-001","verdict: intercept","unknown-tool","verdict: deny"]}
+{"id":"HR-3","messages":["first message","sig DEL-001 rerouted","second message","third message","id SEC-002 verdict: allow"],"must_preserve":["DEL-001","rerouted","SEC-002","verdict: allow"]}

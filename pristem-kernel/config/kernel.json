@@ -1,0 +1,62 @@
+{
+  "schema": "pristem.kernel/v1",
+  "workspace_root": ".",
+  "sigdb_dir": "sigdb",
+  "token_tier": "default",
+  "worker_slots": 4,
+  "max_rounds": 12,
+  "passive_validation": true,
+  "provider": {
+    "default": "openai-chat",
+    "model": "gpt-4o",
+    "api_key_env": "OPENAI_API_KEY",
+    "base_url": null,
+    "temperature": 0.2,
+    "max_tokens": 4096,
+    "stream": false,
+    "providers": {
+      "openai-chat": {
+        "adapter": "openai-chat",
+        "model": "gpt-4o",
+        "api_key_env": "OPENAI_API_KEY"
+      },
+      "openai-responses": {
+        "adapter": "openai-responses",
+        "model": "gpt-4.1",
+        "api_key_env": "OPENAI_API_KEY"
+      },
+      "anthropic-messages": {
+        "adapter": "anthropic-messages",
+        "model": "claude-sonnet-4-5",
+        "api_key_env": "ANTHROPIC_API_KEY",
+        "max_tokens": 8192
+      }
+    }
+  },
+  "gate": {
+    "configurable_mode": "reject"
+  },
+  "test_set": {
+    "protected_prefixes": ["tests/", "test/", "sigdb/", "bench/fixtures/", ".pristem/"],
+    "protected_suffixes": [".test.rs", "_test.rs", ".golden"],
+    "protected_exact": ["Cargo.lock"]
+  },
+  "plugin_policy": {
+    "default_isolation": "out_of_process",
+    "rules": [
+      { "point": "provider_adapter", "isolation": "in_process" },
+      { "point": "language_analyzer", "isolation": "in_process" },
+      { "point": "encoder", "isolation": "in_process" },
+      { "point": "tool", "isolation": "out_of_process" },
+      { "point": "router_policy", "isolation": "out_of_process" },
+      { "point": "ui", "isolation": "out_of_process" }
+    ]
+  },
+  "deepsleep": {
+    "digest_model": null,
+    "same_class_error_threshold": 2,
+    "user_correction_threshold": 3,
+    "solo_path": "SOLO.md",
+    "promotion_required": true
+  }
+}

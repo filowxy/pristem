@@ -1,0 +1,6 @@
+{"id":"RP-1","tier":"micro","reminders":["REMINDER: keep v0.3.0 verbatim"],"answer":"done","expect_reject":false}
+{"id":"RP-2","tier":"default","reminders":["REMINDER: keep v0.3.0 verbatim"],"answer":"done","expect_reject":false}
+{"id":"RP-3","tier":"above_unlimited","reminders":["REMINDER: keep v0.3.0 verbatim"],"answer":"done","expect_reject":true}
+{"id":"RP-4","tier":"above_unlimited","reminders":["REMINDER: keep v0.3.0 verbatim"],"answer":"REMINDER: keep v0.3.0 verbatim — done","expect_reject":false}
+{"id":"RP-5","tier":"unlimited","reminders":["REMINDER: check the gate"],"answer":"done","expect_reject":true}
+{"id":"RP-6","tier":"unlimited","reminders":["REMINDER: check the gate"],"answer":"REMINDER: check the gate — done","expect_reject":false}

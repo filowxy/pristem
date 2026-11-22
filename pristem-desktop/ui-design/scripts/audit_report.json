@@ -1,0 +1,144 @@
+{
+ "findings": [
+  {
+   "rule": "glassmorphism",
+   "level": "WARN",
+   "where": "ui/src/styles.css",
+   "message": "17 backdrop-filter: blur() declarations"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:399",
+   "message": "selector '.session-panel' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:600",
+   "message": "selector '.tree-children' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:799",
+   "message": "selector '.term-tab-more' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:859",
+   "message": "selector '.ai-panel.right' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:931",
+   "message": "selector '.line-warn' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:935",
+   "message": "selector '.line-buttons' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:949",
+   "message": "selector '.line-system' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:1061",
+   "message": "selector '.annotation-card' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:1383",
+   "message": "selector '.jump-line-error' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:1759",
+   "message": "selector '.path-dialog-error' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:1871",
+   "message": "selector '.empty-state[data-v=\"error\"]' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:1884",
+   "message": "selector '.error-card' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:1899",
+   "message": "selector '.composer-blocked' paints a left colour bar"
+  },
+  {
+   "rule": "side-tab",
+   "level": "WARN",
+   "where": "pristem-desktop\\ui\\src\\styles.css:1948",
+   "message": "selector '.welcome-clone-error' paints a left colour bar"
+  },
+  {
+   "rule": "type-scale-chaos",
+   "level": "WARN",
+   "where": "ui/src/styles.css",
+   "message": "9 distinct px sizes (>7): 10, 11, 12, 13, 14, 15, 20, 26, 34"
+  },
+  {
+   "rule": "codex-grid-background",
+   "level": "INFO",
+   "where": "pristem-desktop\\ui\\src\\styles.css:2381",
+   "message": "repeating-linear-gradient(45deg, var(--surface-raised)"
+  },
+  {
+   "rule": "untinted-neutral",
+   "level": "INFO",
+   "where": "ui/src/styles.css",
+   "message": "19 achromatic colours (r=g=b): #000, #000000, #030303, #060606, #0a0a0a, #101010, #161616, #1a1a1a, #1d1d1d, #262626, #383838, #5a5a5a"
+  }
+ ],
+ "stats": {
+  "A": {
+   "palette_total": 31,
+   "palette_neutral": 19,
+   "palette_chromatic": 12,
+   "declared_colours": 30,
+   "stray_colours": 0
+  },
+  "B": {
+   "families": 4,
+   "family_names": "inherit, var(--font-mono), var(--font-ui), var(--font-wordmark)",
+   "type_sizes": 9,
+   "type_ladder": "10, 11, 12, 13, 14, 15, 20, 26, 34"
+  },
+  "C": {
+   "radius_values": 18,
+   "radius_top": "var(--r-2)×50, var(--r-3)×27, 0×25, var(--r-1)×24, 50%×17, var(--r-4)×14",
+   "glass_refs": 6,
+   "backdrop_blur": 17
+  },
+  "D": {
+   "reduced_motion_blocks": 3
+  },
+  "F": {
+   "contrast_pairs": 32,
+   "contrast_success": 9.17,
+   "contrast_warn": 9.06,
+   "contrast_danger": 5.61,
+   "contrast_info": 8.0,
+   "off_grid_values": ""
+  }
+ }
+}

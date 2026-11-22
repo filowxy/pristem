@@ -1,0 +1,29 @@
+[package]
+name = "pristem-bench"
+description = "Criterion benches + the three protocol verification experiment benches (hallu-replay / remind-probe / pid-probe)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+serde_json.workspace = true
+pristem-core.workspace = true
+pristem-defense.workspace = true
+pristem-harness.workspace = true
+pristem-provider.workspace = true
+pristem-deepsleep.workspace = true
+tokio.workspace = true
+
+[[bench]]
+name = "loop_latency"
+harness = false
+
+[[bench]]
+name = "defense_throughput"
+harness = false
+
+[[bench]]
+name = "registry_check"
+harness = false

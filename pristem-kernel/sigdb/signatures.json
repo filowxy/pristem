@@ -1,0 +1,33 @@
+{
+  "version": "0.3.0",
+  "name": "pristem sigdb v0 corpus",
+  "note": "O3 closed for the scaffold: first 26 signatures, evidence lineage = weak-test pack. scope=context feeds inbound/outbound scans; scope=command feeds the G4 deletion-verb gate only. Hot updates must carry a strictly greater version.",
+  "signatures": [
+    { "id": "JB-001", "kind": "jailbreak", "scope": "context", "pattern": "ignore (all )?(previous|prior|above|earlier) instructions", "severity": 9, "audit": "full_capture", "description": "canonical instruction override" },
+    { "id": "JB-002", "kind": "jailbreak", "scope": "context", "pattern": "disregard (all |any )?(previous|prior|above|earlier|your) (instructions|rules|prompt)", "severity": 9, "audit": "full_capture", "description": "override variant" },
+    { "id": "JB-003", "kind": "jailbreak", "scope": "context", "pattern": "(act as|you are now) (an? )?(unrestricted|unfiltered|jailbroken|evil|dan\\b)", "severity": 8, "audit": "full_capture", "description": "persona escape" },
+    { "id": "JB-004", "kind": "jailbreak", "scope": "context", "pattern": "\\b(enable|activate|enter) (developer|god|debug) mode\\b", "severity": 5, "audit": "counter_only", "description": "noisy developer-mode bait" },
+    { "id": "JB-005", "kind": "jailbreak", "scope": "context", "pattern": "do not (follow|obey) (your|the) (system|original|previous) (prompt|instructions|rules)", "severity": 9, "audit": "full_capture", "description": "direct negation of constitution" },
+    { "id": "JB-006", "kind": "jailbreak", "scope": "context", "pattern": "pretend (that )?(there are|you have) no (rules|restrictions|guardrails|limits)", "severity": 8, "audit": "full_capture", "description": "guardrail erasure" },
+    { "id": "JB-007", "kind": "jailbreak", "scope": "context", "pattern": "override (your|the) (safety|policy|guardrail|alignment) (rules|settings|checks)?", "severity": 8, "audit": "full_capture", "description": "policy override claim" },
+    { "id": "PS-001", "kind": "pseudo_system", "scope": "context", "pattern": "<\\|?\\s*(im_start|im_end)\\s*\\|?>\\s*(system|user|assistant)", "severity": 10, "audit": "full_capture", "description": "forged chat-ml role marker" },
+    { "id": "PS-002", "kind": "pseudo_system", "scope": "context", "pattern": "(?m)^\\s*(\\[|#+\\s*)?(SYSTEM|System Instruction|###\\s*Instruction)\\s*(\\]|:)", "severity": 9, "audit": "full_capture", "description": "forged system header at line start" },
+    { "id": "PS-003", "kind": "pseudo_system", "scope": "context", "pattern": "<\\s*/?\\s*(system|instructions|prompt)\\s*>", "severity": 9, "audit": "full_capture", "description": "XML pseudo-system tag" },
+    { "id": "AC-001", "kind": "authority_claim", "scope": "context", "pattern": "i am (the |a )?(developer|admin|administrator|owner|creator) (of|for|behind) (this|your|the) (system|agent|model)", "severity": 8, "audit": "full_capture", "description": "self-declared authority" },
+    { "id": "AC-002", "kind": "authority_claim", "scope": "context", "pattern": "on behalf of (openai|anthropic|the (system|admin|security team))", "severity": 8, "audit": "full_capture", "description": "borrowed authority" },
+    { "id": "AC-003", "kind": "authority_claim", "scope": "context", "pattern": "this (is|message is) (an? )?(authorized|official|signed) (override|instruction|directive)", "severity": 9, "audit": "full_capture", "description": "fake authorization" },
+    { "id": "AC-004", "kind": "authority_claim", "scope": "context", "pattern": "system (instruction|directive) (from|by) (the )?(ceo|founder|maintainer|root)", "severity": 8, "audit": "full_capture", "description": "escalated provenance claim" },
+    { "id": "PL-001", "kind": "prompt_leak", "scope": "context", "pattern": "(repeat|echo|output) (everything|all (the )?text|all instructions) (above|before|so far)", "severity": 7, "audit": "full_capture", "description": "context exfiltration" },
+    { "id": "PL-002", "kind": "prompt_leak", "scope": "context", "pattern": "(print|show|reveal|dump) (me )?(your|the) (system prompt|hidden instructions|constitution|sig ?db)", "severity": 9, "audit": "full_capture", "description": "system prompt extraction" },
+    { "id": "PL-003", "kind": "prompt_leak", "scope": "context", "pattern": "(reveal|leak|expose) (your|the) (api[_ -]?key|secret|token|credential)", "severity": 9, "audit": "full_capture", "description": "credential extraction" },
+    { "id": "SEC-001", "kind": "secret", "scope": "context", "pattern": "sk-[A-Za-z0-9_-]{16,}", "severity": 10, "audit": "counter_only", "description": "OpenAI-style key in outbound text" },
+    { "id": "SEC-002", "kind": "secret", "scope": "context", "pattern": "AKIA[0-9A-Z]{16}", "severity": 10, "audit": "counter_only", "description": "AWS access key id" },
+    { "id": "SEC-003", "kind": "secret", "scope": "context", "pattern": "-----BEGIN [A-Z ]*PRIVATE KEY-----", "severity": 10, "audit": "counter_only", "description": "PEM private key" },
+    { "id": "DEL-001", "kind": "deletion_verb", "scope": "command", "pattern": "\\brm\\s+-[rRfF]{1,3}\\b", "severity": 7, "audit": "counter_only", "description": "unix recursive delete" },
+    { "id": "DEL-002", "kind": "deletion_verb", "scope": "command", "pattern": "\\b(rmdir|unlink|shred)\\b", "severity": 7, "audit": "counter_only", "description": "unix delete verbs" },
+    { "id": "DEL-003", "kind": "deletion_verb", "scope": "command", "pattern": "\\bdel\\s+/[sSqQfF]\\b", "severity": 7, "audit": "counter_only", "description": "windows del /S /Q" },
+    { "id": "DEL-004", "kind": "deletion_verb", "scope": "command", "pattern": "\\bRemove-Item\\b", "severity": 7, "audit": "counter_only", "description": "powershell delete" },
+    { "id": "DEL-005", "kind": "deletion_verb", "scope": "command", "pattern": "\\b(shutil\\.rmtree|os\\.remove|os\\.unlink|fs\\.unlinkSync|fs\\.rmSync)\\b", "severity": 7, "audit": "counter_only", "description": "library delete calls" },
+    { "id": "DEL-006", "kind": "deletion_verb", "scope": "command", "pattern": "\\bgit\\s+clean\\s+-[fdxFDX]{1,3}\\b", "severity": 7, "audit": "counter_only", "description": "vcs tree deletion" }
+  ]
+}

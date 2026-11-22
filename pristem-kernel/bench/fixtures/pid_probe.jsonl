@@ -1,0 +1,8 @@
+{"id":"PP-1","tool":"format-c","args":{"path":"a.txt"},"expect_code":"unknown-tool"}
+{"id":"PP-2","tool":"read","args":{},"expect_code":"unknown-args"}
+{"id":"PP-3","tool":"read","args":{"path":".env"},"expect_code":"denied"}
+{"id":"PP-4","tool":"exec","args":{"command":"rm -rf ./build"},"expect_effective":"delete"}
+{"id":"PP-5","tool":"write","args":{"path":"tests/x.golden","content":"x"},"expect_code":"denied"}
+{"id":"PP-6","tool":"read","args":{"path":"src/lib.rs"},"expect_code":"allow"}
+{"id":"PP-7","tool":"exec","args":{"command":"Remove-Item -Recurse x"},"expect_effective":"delete"}
+{"id":"PP-8","tool":"read","args":{"path":"../outside.txt"},"expect_code":"denied"}

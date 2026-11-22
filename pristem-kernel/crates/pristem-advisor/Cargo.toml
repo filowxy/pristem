@@ -1,0 +1,13 @@
+[package]
+name = "pristem-advisor"
+description = "Deliberately thin annotation bridge: pause/resume, annotation ingestion, auto-chain into deepsleep digestion"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+serde.workspace = true
+thiserror.workspace = true
+pristem-defense.workspace = true
+pristem-deepsleep.workspace = true

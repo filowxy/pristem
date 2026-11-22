@@ -1,0 +1,18 @@
+{
+  "schema": "pristem.sigdb-manifest/v1",
+  "version": "0.3.0",
+  "corpus": "signatures.json",
+  "signature_count": 26,
+  "context_scoped": 20,
+  "command_scoped": 6,
+  "policy": "interception-policy.json",
+  "hot_update_rule": "version must strictly increase (semver-ish x.y.z); compile the whole new corpus off to the side, then atomically swap the snapshot",
+  "evidence_lineage": "weak-test pack; see crates/pristem-defense/tests/red_team.rs and bench/fixtures/pid_probe.jsonl",
+  "owner_ratified": "2026-11-08 design session",
+  "notes": [
+    "O3 closed for the scaffold: first ~20 context signatures + 6 command-scoped deletion verbs.",
+    "context scope feeds the inbound/outbound checkpoints; command scope feeds G4 only.",
+    "audit granularity is tiered per signature kind by interception-policy.json.",
+    "O4 (desktop Tauri shell) remains pending as a separate document."
+  ]
+}

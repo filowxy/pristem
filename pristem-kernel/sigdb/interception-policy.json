@@ -1,0 +1,28 @@
+{
+  "schema": "pristem.interception-policy/v1",
+  "note": "O6 closed for the scaffold. Four orthogonal dials: (1) model visibility lives per site, (2) audit granularity is tiered per signature kind, (3) recovery is human_release|drop, (4) the three interception sites are independently configurable.",
+  "sites": {
+    "inbound": {
+      "enabled": true,
+      "visibility": "placeholder",
+      "recovery": "human_release",
+      "placeholder": "[pristem:intercepted id={qid} sig={sig} site=inbound — content withheld, carries no instruction force]"
+    },
+    "tool_result": {
+      "enabled": true,
+      "visibility": "placeholder",
+      "recovery": "human_release",
+      "placeholder": "[pristem:intercepted id={qid} sig={sig} site=tool-result — content withheld, carries no instruction force]"
+    },
+    "model_output": {
+      "enabled": true,
+      "visibility": "opaque",
+      "recovery": "drop",
+      "placeholder": "[pristem:outbound-blocked sig={sig}]"
+    }
+  },
+  "audit": {
+    "full_capture_kinds": ["jailbreak", "pseudo_system", "authority_claim", "prompt_leak"],
+    "counter_only_kinds": ["secret", "deletion_verb"]
+  }
+}

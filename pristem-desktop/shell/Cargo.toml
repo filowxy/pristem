@@ -1,0 +1,39 @@
+[package]
+name = "pristem-desktop"
+version = "0.1.0"
+edition = "2021"
+description = "pristem desktop client — native tao/wry window, thin UI over pristem-ipc"
+
+[dependencies]
+tao = "0.37"
+wry = "0.57"
+rfd = { version = "0.15", default-features = false, features = ["common-controls-v6"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "sync", "macros", "time"] }
+
+pristem-core = { path = "../../pristem-kernel/crates/pristem-core" }
+pristem-ipc = { path = "../../pristem-kernel/crates/pristem-ipc" }
+pristem-provider = { path = "../../pristem-kernel/crates/pristem-provider" }
+pristem-harness = { path = "../../pristem-kernel/crates/pristem-harness" }
+
+# Both already present in Cargo.lock (transitive) — no new downloads, offline-safe.
+regex = "1.13"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = [
+  "Win32_Foundation",
+  "Win32_Globalization",
+  "Win32_Security",
+  "Win32_Security_Cryptography",
+  "Win32_Storage_FileSystem",
+  "Win32_System_Console",
+  "Win32_System_DataExchange",
+  "Win32_System_Diagnostics_Debug",
+  "Win32_System_Diagnostics_ToolHelp",
+  "Win32_System_Memory",
+  "Win32_System_Pipes",
+  "Win32_System_Threading",
+] }
+
+[workspace]

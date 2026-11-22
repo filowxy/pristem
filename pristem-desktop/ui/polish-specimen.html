@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="zh-CN" class="specimen">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="icon" href="data:," />
+  <title>Pristem · UI 打磨样本</title>
+  <!-- Real shipped stylesheets: this page is a QA surface, not a mockup. -->
+  <link rel="stylesheet" href="./node_modules/@fontsource/ibm-plex-sans/400.css" />
+  <link rel="stylesheet" href="./node_modules/@fontsource/ibm-plex-sans/500.css" />
+  <link rel="stylesheet" href="./node_modules/@fontsource/ibm-plex-sans/600.css" />
+  <link rel="stylesheet" href="./node_modules/@fontsource/ibm-plex-mono/400.css" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="stylesheet" href="./src/polish.css" />
+  <style>
+    /* Specimen-only chrome. Everything inside a .sp-card uses product classes. */
+    html.specimen, html.specimen body { height: auto; min-height: 100%; overflow: auto; }
+    body.specimen { background: var(--surface-void); }
+    .sp { max-width: 1020px; margin: 0 auto; padding: 48px 32px 96px; }
+    .sp-hero { padding-bottom: 28px; border-bottom: 1px solid var(--line-hair); }
+    .sp-eyebrow { font-family: var(--font-mono); font-size: var(--fs-micro); letter-spacing: .14em; color: var(--text-3); }
+    .sp-hero h1 { font-size: var(--fs-hero); font-weight: 600; letter-spacing: 0; line-height: 1.25; color: var(--text-1); margin: 10px 0 8px; }
+    .sp-hero p { font-size: var(--fs-body); line-height: 1.7; color: var(--text-2); max-width: 68ch; margin: 0; }
+    .sp-hero code { font-family: var(--font-mono); font-size: var(--fs-mono-xs); color: var(--beam); background: var(--surface-inset); padding: 1px 5px; border-radius: var(--r-1); }
+    .sp-hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 20px; }
+    .sp-hero-actions .secondary-btn { height: 32px; font-size: var(--fs-body-sm); }
+    .sp-note { font-size: var(--fs-label); color: var(--text-3); }
+    .sp-probe {
+      margin: 20px 0 0; padding: 12px 14px; border: 1px solid var(--line-hair);
+      border-left: 2px solid var(--success); border-radius: var(--r-3);
+      background: var(--surface-inset); font-family: var(--font-mono);
+      font-size: var(--fs-mono-xs); line-height: 1.8; color: var(--text-2);
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .sp-probe b { color: var(--text-1); font-weight: 600; }
+    .sp-sec { margin-top: 44px; }
+    .sp-sec > h2 {
+      font-size: var(--fs-subtitle); font-weight: 600; color: var(--text-1);
+      margin: 0 0 4px; padding-bottom: 10px; border-bottom: 1px solid var(--line-hair);
+    }
+    .sp-lede { font-size: var(--fs-body-sm); line-height: 1.7; color: var(--text-3); margin: 10px 0 18px; }
+    .sp-card {
+      border: 1px solid var(--line-hair); border-radius: var(--r-4);
+      background: var(--surface-panel); padding: 18px 20px; margin-bottom: 12px;
+    }
+    .sp-card-label { font-size: var(--fs-label); color: var(--text-3); margin-bottom: 12px; }
+    .sp-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .sp-row + .sp-row { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+    .sp-type-row { display: grid; grid-template-columns: 130px minmax(0,1fr) auto; gap: 16px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line-soft); }
+    .sp-type-row:last-child { border-bottom: 0; }
+    .sp-type-key { font-family: var(--font-mono); font-size: var(--fs-mono-xs); color: var(--text-3); }
+    .sp-type-sample { color: var(--text-1); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sp-type-meta { font-family: var(--font-mono); font-size: var(--fs-mono-xs); color: var(--text-4); }
+    .sp-space-row { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
+    .sp-space-bar { height: 10px; background: var(--beam-dim); border-radius: 2px; opacity: .8; }
+    .sp-space-key { font-family: var(--font-mono); font-size: var(--fs-mono-xs); color: var(--text-3); width: 100px; flex: none; }
+    .sp-space-val { font-family: var(--font-mono); font-size: var(--fs-mono-xs); color: var(--text-3); width: 40px; flex: none; }
+    .sp-swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+    .sp-swatch { padding: 12px 14px; border-radius: var(--r-3); background: var(--surface-panel); border: 1px solid var(--line-hair); }
+    .sp-swatch-name { font-family: var(--font-mono); font-size: var(--fs-mono-xs); display: block; margin-bottom: 6px; }
+    .sp-swatch-ratio { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-3); display: block; margin-top: 8px; }
+    .sp-swatch-verdict { font-size: var(--fs-label); display: block; margin-top: 3px; }
+    .sp-swatch.ok .sp-swatch-verdict { color: var(--success); }
+    .sp-swatch.no .sp-swatch-verdict { color: var(--warn); }
+    .sp-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .sp-compare-col { border: 1px solid var(--line-hair); border-radius: var(--r-4); padding: 16px; background: var(--surface-inset); }
+    .sp-compare-col > h3 { font-size: var(--fs-label); font-weight: 600; color: var(--text-2); margin: 0 0 4px; }
+    .sp-compare-col > p { font-size: var(--fs-micro); color: var(--text-3); margin: 0 0 14px; line-height: 1.6; }
+    .sp-demo {
+      height: 76px; width: 100%; display: grid; place-items: center;
+      border: 1px solid var(--line-strong); border-radius: var(--r-3);
+      background: var(--surface-raised); color: var(--text-2);
+      font-size: var(--fs-body-sm);
+    }
+    .sp-demo:hover { background: var(--beam-wash); border-color: var(--line-beam); color: var(--text-1); }
+    .sp-load-demo { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+    .sp-card .skeleton { max-width: none; margin-top: 14px; }
+    .sp-hint { font-size: var(--fs-micro); color: var(--text-3); margin-top: 12px; line-height: 1.6; }
+    .sp-neutral-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .sp-neutral {
+      width: 104px; padding: 10px; border: 1px solid var(--line-hair);
+      border-radius: var(--r-3); background: var(--surface-inset);
+    }
+    .sp-neutral-chip { display: block; height: 34px; border-radius: var(--r-2); margin-bottom: 8px; border: 1px solid var(--line-hair); }
+    .sp-neutral-key, .sp-neutral-code { display: block; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-2); }
+    .sp-neutral-code { color: var(--text-3); margin-top: 2px; }
+    .sp-curve-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+    .sp-curve-box {
+      height: 132px; border-radius: 32px; display: grid; place-content: center; text-align: center;
+      background: var(--surface-raised); border: 1px solid var(--line-strong);
+      color: var(--text-2); font-size: var(--fs-label); line-height: 1.9;
+    }
+    .sp-curve-box.is-g1 { corner-shape: round; }
+    .sp-curve-box.is-g2 { corner-shape: superellipse(2); }
+    .sp-table { width: 100%; border-collapse: collapse; font-size: var(--fs-body-sm); }
+    .sp-table th, .sp-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line-soft); color: var(--text-2); }
+    .sp-table th { font-size: var(--fs-label); font-weight: 600; color: var(--text-3); }
+    .sp-table code { font-family: var(--font-mono); font-size: var(--fs-mono-xs); color: var(--text-1); }
+    .sp-table tr.is-old td { color: var(--text-3); }
+    .sp-foot { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line-hair); font-size: var(--fs-micro); color: var(--text-3); line-height: 1.8; }
+    .sp-foot code { font-family: var(--font-mono); color: var(--text-2); }
+    /* Keep the specimen's own empty state compact. */
+    .sp-card .empty-state { padding: 18px; }
+    /* The real textarea lives inside .composer; reproduce that rule here so
+       the specimen shows the shipped control, not a browser default. */
+    .sp-card .composer-box textarea {
+      display: block; width: 100%; resize: none; border: 0; outline: none;
+      background: transparent; padding: 10px 12px 4px;
+      font-size: var(--fs-body); line-height: 1.6; color: var(--text-1);
+    }
+    .sp-card .composer-box textarea::placeholder { color: var(--text-3); }
+  </style>
+</head>
+<body class="specimen">
+<main class="sp">
+  <header class="sp-hero">
+    <span class="sp-eyebrow">DESIGN QA / SPECIMEN 01</span>
+    <h1>Pristem · UI 打磨样本</h1>
+    <p>这一页直接加载产品真实使用的 <code>styles.css</code> 与 <code>polish.css</code>，把字号、间距、对比度、交互状态和加载态摊开检查。它不是新的组件库，而是对已落地样式的一次可交互验收。</p>
+    <div class="sp-hero-actions">
+      <span class="sp-note">悬停、Tab、按压每一项，检查状态是否都有回应；所有读数取自当前页面的计算样式。</span>
+    </div>
+  </header>
+
+  <div class="sp-probe" id="sp-probe">正在读取计算样式…</div>
+
+  <section class="sp-sec">
+    <h2>01 · 字号标度</h2>
+    <p class="sp-lede">原来散落的 10 / 10.5 / 11 / 11.5 / 12 / 12.5px 已归一为一套刻度。<b>「基准字号」设置现在会等比缩放全部 token</b>，而不是只影响 4 处。</p>
+    <div class="sp-card">
+      <div class="sp-card-label">DESIGN §3.3 · 以 13px 为基准</div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-hero</span><span class="sp-type-sample" style="font-size:var(--fs-hero);font-weight:600">全屏主标题</span><span class="sp-type-meta">34 / 600</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-display</span><span class="sp-type-sample" style="font-size:var(--fs-display);font-weight:600">智能体正在休息</span><span class="sp-type-meta">26 / 600</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-title</span><span class="sp-type-sample" style="font-size:var(--fs-title);font-weight:600">页面标题</span><span class="sp-type-meta">20 / 600</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-subtitle</span><span class="sp-type-sample" style="font-size:var(--fs-subtitle);font-weight:600">小节标题</span><span class="sp-type-meta">15 / 600</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-body</span><span class="sp-type-sample" style="font-size:var(--fs-body)">默认正文，用于所有自然语言句子。</span><span class="sp-type-meta">13 / 400</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-body-sm</span><span class="sp-type-sample" style="font-size:var(--fs-body-sm)">次级正文、列表项、按钮。</span><span class="sp-type-meta">12 / 400</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-label</span><span class="sp-type-sample" style="font-size:var(--fs-label)">控件标签与状态文本</span><span class="sp-type-meta">11 / 500</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-micro</span><span class="sp-type-sample" style="font-size:var(--fs-micro)">辅助说明、计数</span><span class="sp-type-meta">10 / 500</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-mono</span><span class="sp-type-sample" style="font-family:var(--font-mono);font-size:var(--fs-mono)">src/polish.css:12</span><span class="sp-type-meta">11.5 / mono</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-mono-xs</span><span class="sp-type-sample" style="font-family:var(--font-mono);font-size:var(--fs-mono-xs)">Ln 24, Col 8</span><span class="sp-type-meta">10 / mono</span></div>
+      <div class="sp-type-row"><span class="sp-type-key">--fs-wordmark</span><span class="sp-type-sample" style="font-family:var(--font-wordmark);font-size:var(--fs-wordmark);font-weight:600">pristem<i style="font-style:normal;color:var(--beam-dim)">.</i></span><span class="sp-type-meta">14 / 仅拉丁</span></div>
+    </div>
+  </section>
+
+  <section class="sp-sec">
+    <h2>02 · 间距节奏</h2>
+    <p class="sp-lede">一条 4px 基数的刻度，替代各页面随手写下的 10 / 13 / 18px 间隙。</p>
+    <div class="sp-card">
+      <div class="sp-space-row"><span class="sp-space-key">--sp-1</span><span class="sp-space-bar" style="width:4px"></span><span class="sp-space-val">4px</span></div>
+      <div class="sp-space-row"><span class="sp-space-key">--sp-2</span><span class="sp-space-bar" style="width:8px"></span><span class="sp-space-val">8px</span></div>
+      <div class="sp-space-row"><span class="sp-space-key">--sp-3</span><span class="sp-space-bar" style="width:12px"></span><span class="sp-space-val">12px</span></div>
+      <div class="sp-space-row"><span class="sp-space-key">--sp-4</span><span class="sp-space-bar" style="width:16px"></span><span class="sp-space-val">16px</span></div>
+      <div class="sp-space-row"><span class="sp-space-key">--sp-5</span><span class="sp-space-bar" style="width:20px"></span><span class="sp-space-val">20px</span></div>
+      <div class="sp-space-row"><span class="sp-space-key">--sp-6</span><span class="sp-space-bar" style="width:24px"></span><span class="sp-space-val">24px</span></div>
+      <div class="sp-space-row"><span class="sp-space-key">--sp-8</span><span class="sp-space-bar" style="width:32px"></span><span class="sp-space-val">32px</span></div>
+      <div class="sp-space-row"><span class="sp-space-key">--sp-12</span><span class="sp-space-bar" style="width:48px"></span><span class="sp-space-val">48px</span></div>
+    </div>
+  </section>
+
+  <section class="sp-sec">
+    <h2>03 · 对比度下限</h2>
+    <p class="sp-lede">在 <code style="font-family:var(--font-mono);font-size:var(--fs-mono-xs);color:var(--beam)">--surface-panel</code> 上实测。<b>--text-4</b> 只有 3.38:1，打磨层已把所有承载语义的提示、标签、时间戳、行号从它迁移出去，只留装饰用途。</p>
+    <div class="sp-swatches">
+      <div class="sp-swatch ok"><span class="sp-swatch-name" style="color:var(--text-1)">--text-1 · 长段正文</span><span class="sp-swatch-name" style="color:var(--text-1)">看得清，也耐看</span><span class="sp-swatch-ratio">12.99:1 · AAA</span><span class="sp-swatch-verdict">✓ 允许承载正文</span></div>
+      <div class="sp-swatch ok"><span class="sp-swatch-name" style="color:var(--text-2)">--text-2 · 次级正文</span><span class="sp-swatch-name" style="color:var(--text-2)">说明与描述</span><span class="sp-swatch-ratio">8.19:1 · AAA</span><span class="sp-swatch-verdict">✓ 浮层面最低</span></div>
+      <div class="sp-swatch ok"><span class="sp-swatch-name" style="color:var(--text-3)">--text-3 · 辅助文本</span><span class="sp-swatch-name" style="color:var(--text-3)">标签、时间戳、行号</span><span class="sp-swatch-ratio">4.81:1 · AA</span><span class="sp-swatch-verdict">✓ 仅限 ≥12px</span></div>
+      <div class="sp-swatch no"><span class="sp-swatch-name" style="color:var(--text-4)">--text-4 · 装饰</span><span class="sp-swatch-name" style="color:var(--text-4)">不再承载语义</span><span class="sp-swatch-ratio">3.38:1 · 未达标</span><span class="sp-swatch-verdict">! 仅分隔符 / 图标</span></div>
+    </div>
+  </section>
+
+  <section class="sp-sec">
+    <h2>04 · 交互状态</h2>
+    <p class="sp-lede">以下全部是产品真实类名，不是示意图形。请把鼠标移上去、用 Tab 切换焦点，观察 hover / active / focus-visible / disabled 是否都有回应。</p>
+
+    <div class="sp-card">
+      <div class="sp-card-label">按钮 · 默认 / hover / 按压 / 焦点 / 禁用</div>
+      <div class="sp-row">
+        <button type="button" class="primary-btn">主要操作</button>
+        <button type="button" class="secondary-btn">次要操作</button>
+        <button type="button" class="mini-btn">轻量按钮</button>
+        <button type="button" class="text-btn">文字按钮</button>
+        <button type="button" class="icon-btn" aria-label="命令面板">⌘</button>
+      </div>
+      <div class="sp-row">
+        <button type="button" class="primary-btn" disabled>禁用</button>
+        <button type="button" class="secondary-btn" disabled>禁用</button>
+        <button type="button" class="mini-btn" disabled>禁用</button>
+        <button type="button" class="text-btn" disabled>禁用</button>
+        <span class="sp-note">opacity 由 .38 提到 .52，禁用态仍能读清</span>
+      </div>
+    </div>
+
+    <div class="sp-card">
+      <div class="sp-card-label">标签 / 分段 / 开关 · 选中态不再靠猜</div>
+      <div class="sp-row">
+        <div class="panel-tabs" style="height:32px">
+          <button type="button" class="panel-tab is-active">终端</button>
+          <button type="button" class="panel-tab">输出</button>
+          <button type="button" class="panel-tab">问题 <span class="panel-tab-badge">2</span></button>
+        </div>
+        <div class="settings-seg">
+          <button type="button">12</button><button type="button" class="is-on">13</button><button type="button">14</button>
+        </div>
+        <button type="button" class="settings-switch is-on" aria-label="已开启"></button>
+        <button type="button" class="settings-switch" aria-label="已关闭"></button>
+      </div>
+    </div>
+
+    <div class="sp-card">
+      <div class="sp-card-label">输入 · 焦点环由容器统一绘制，不再有漏网控件</div>
+      <div class="sp-row">
+        <div class="search-capsule" style="flex:0 1 240px"><input type="text" placeholder="搜索文件…" aria-label="搜索文件" /></div>
+        <input type="text" class="settings-search" style="flex:0 1 200px" placeholder="设置搜索" aria-label="设置搜索" />
+      </div>
+      <div class="sp-row">
+        <div class="composer-box" style="max-width:420px;flex:1 1 320px">
+          <textarea rows="2" placeholder="输入一句话…" aria-label="输入框"></textarea>
+        </div>
+        <span class="sp-note">Tab 到任意控件时会出现一致的光晕焦点环</span>
+      </div>
+    </div>
+
+    <div class="sp-card">
+      <div class="sp-card-label">空态 / 起步句 · 一个语法，而不是每屏各写一套</div>
+      <div class="sp-row" style="gap:20px;align-items:stretch">
+        <div class="empty-state is-compact" style="border:1px solid var(--line-hair);border-radius:var(--r-4)">
+          <span class="empty-icon" aria-hidden="true">◇</span>
+          <span class="empty-title">还没有对话</span>
+          <span class="empty-desc">描述你想做的事，或直接选一条起步句。</span>
+          <div class="empty-actions"><button type="button" class="primary-btn">开始</button><button type="button" class="text-btn">了解更多</button></div>
+        </div>
+        <div style="display:grid;gap:10px;align-content:center">
+          <div class="goal-starters" style="margin:0">
+            <button type="button" class="goal-template">梳理一个架构决策</button>
+            <button type="button" class="goal-template">为这段流程补测试</button>
+          </div>
+          <span class="sp-note">悬停是轻微表面变化，按压只变色；全程不位移、不发光</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sp-sec">
+    <h2>05 · 动效：之前 / 之后</h2>
+    <p class="sp-lede">把鼠标移到两张卡片上对比。左卡刻意关掉过渡，复现打磨前「颜色瞬间跳变」的手感；右卡由打磨层的零特异性基线统一驱动。</p>
+    <div class="sp-compare">
+      <div class="sp-compare-col">
+        <h3>之前 · 无过渡</h3>
+        <p>多数 tab、导航、树行原本没有 transition，hover 是硬切。</p>
+        <button type="button" class="sp-demo" style="transition:none !important">把鼠标放上来</button>
+      </div>
+      <div class="sp-compare-col">
+        <h3>之后 · 120ms / ease-move</h3>
+        <p>背景、边框、颜色、阴影、按压亮度走同一条曲线；退出更快，不弹跳。</p>
+        <button type="button" class="sp-demo">把鼠标放上来</button>
+      </div>
+      <div class="sp-compare-col">
+        <h3>加载态</h3>
+        <p>所有加载指示都在动：三点脉冲、连接指示、骨架微光；只做透明度变化，不位移。</p>
+        <div class="sp-load-demo"><span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="sp-note">正在思考…</span></div>
+        <div class="skeleton" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+    <p class="sp-hint">可访问性：应用内的「减弱动效」原本只写 DOM 标志、CSS 从未读取；打磨层补齐了 <code style="font-family:var(--font-mono)">data-motion</code> / <code style="font-family:var(--font-mono)">data-pointer</code> / <code style="font-family:var(--font-mono)">data-living</code>，并让显式「完全」覆盖操作系统的减少动效设置。焦点指示、加载骨架等功能性动画不会被一并关掉。</p>
+  </section>
+
+  <section class="sp-sec">
+    <h2>06 · 无彩黑与连续曲率</h2>
+    <p class="sp-lede">原来的「黑」是一组蓝灰：<code style="font-family:var(--font-mono);font-size:var(--fs-mono-xs);color:var(--beam)">#10141A → #343E4B</code>，蓝通道比红通道高 10–23，越亮越蓝。现在所有中性色 R=G=B，深度只由明度产生；色相只留给语义色、语法色和棱镜。</p>
+
+    <div class="sp-card">
+      <div class="sp-card-label">表面色阶 · 主体落在 #141414–#1d1d1d（Cursor / Zed 的区间）</div>
+      <div class="sp-neutral-row">
+        <div class="sp-neutral"><span class="sp-neutral-chip" style="background:#0F0F0F"></span><span class="sp-neutral-key">void</span><span class="sp-neutral-code">#0F0F0F</span></div>
+        <div class="sp-neutral"><span class="sp-neutral-chip" style="background:#141414"></span><span class="sp-neutral-key">rail</span><span class="sp-neutral-code">#141414</span></div>
+        <div class="sp-neutral"><span class="sp-neutral-chip" style="background:#161616"></span><span class="sp-neutral-key">inset</span><span class="sp-neutral-code">#161616</span></div>
+        <div class="sp-neutral"><span class="sp-neutral-chip" style="background:#181818"></span><span class="sp-neutral-key">chrome</span><span class="sp-neutral-code">#181818</span></div>
+        <div class="sp-neutral"><span class="sp-neutral-chip" style="background:#1B1B1B"></span><span class="sp-neutral-key">panel</span><span class="sp-neutral-code">#1B1B1B</span></div>
+        <div class="sp-neutral"><span class="sp-neutral-chip" style="background:#1D1D1D"></span><span class="sp-neutral-key">canvas</span><span class="sp-neutral-code">#1D1D1D</span></div>
+        <div class="sp-neutral"><span class="sp-neutral-chip" style="background:#232323"></span><span class="sp-neutral-key">raised</span><span class="sp-neutral-code">#232323</span></div>
+        <div class="sp-neutral"><span class="sp-neutral-chip" style="background:#282828"></span><span class="sp-neutral-key">float</span><span class="sp-neutral-code">#282828</span></div>
+      </div>
+    </div>
+
+    <div class="sp-card">
+      <div class="sp-card-label">同一 32px 半径 · G1 圆弧 vs G2 连续曲率（放大看直边与角的接合处）</div>
+      <div class="sp-curve-compare">
+        <div class="sp-curve-box is-g1">border-radius 圆弧<br><span class="sp-note">G1 · 曲率从 0 突跳到 1/r</span></div>
+        <div class="sp-curve-box is-g2">corner-shape: superellipse(2)<br><span class="sp-note">G2 · 曲率连续爬升</span></div>
+      </div>
+      <p class="sp-hint">Chromium 139+ 原生支持 <code style="font-family:var(--font-mono)">corner-shape</code>；本机 WebView2 为 157，实际渲染的就是超椭圆，不是 clip-path 近似。边框、阴影、背景裁切都保留。正圆与胶囊被显式排除，否则端头会被削方。</p>
+    </div>
+
+    <div class="sp-card">
+      <div class="sp-card-label">参照基准 · 应用内界面（不是营销站）</div>
+      <table class="sp-table">
+        <thead><tr><th>产品</th><th>编辑器底</th><th>浮层 / 边框</th><th>关键约束</th></tr></thead>
+        <tbody>
+          <tr><td>Cursor</td><td><code>#181818</code></td><td><code>#1d1d1d</code> / <code>#383838</code></td><td>所有表面锁在 #141414–#1d1d1d；不用渐变、投影、彩色发光；深度只靠明度</td></tr>
+          <tr><td>Zed / VS Code Dark Modern</td><td><code>#1e1e1e</code></td><td><code>#2a2a2a</code></td><td>前景 #d4d4d4，R=G=B 纯中性</td></tr>
+          <tr class="is-old"><td>Pristem · 旧</td><td><code>#10141A</code></td><td><code>#232A33</code> / <code>#333D48</code></td><td>蓝偏 +10…+23，越亮越蓝，与「无彩底」的规范自相矛盾</td></tr>
+          <tr><td>Pristem · 现在</td><td><code>#0F0F0F</code></td><td><code>#1D1D1D</code> / <code>#2E2E2E</code></td><td>中性无彩 + 连续曲率；色相只给语义 / 语法 / 棱镜</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="sp-foot">
+    校验方式：<code>node .visual-check/check.cjs</code> 与 <code>node .visual-check/_effects-selfcheck.cjs</code> 对真实服务运行；本页用于人工逐项核对，不参与构建。<br />
+    本页只引用 <code>src/styles.css</code> + <code>src/polish.css</code>，任何一处 token 改动都会立即在这里显形。
+  </p>
+</main>
+<script>
+  (function () {
+    var root = document.documentElement;
+    var probe = document.getElementById('sp-probe');
+    function styleOf(cls, prop, tag) {
+      // Control classes must be probed on a real <button>: the shared
+      // transition baseline is element-scoped, not class-scoped.
+      var d = document.createElement(tag || 'div');
+      d.className = cls;
+      document.body.appendChild(d);
+      var v = getComputedStyle(d)[prop];
+      d.remove();
+      return v;
+    }
+    function childStyleOf(parentCls, childTag, prop) {
+      var d = document.createElement('div');
+      d.className = parentCls;
+      var c = document.createElement(childTag);
+      d.appendChild(c);
+      document.body.appendChild(d);
+      var v = getComputedStyle(c)[prop];
+      d.remove();
+      return v;
+    }
+    function render() {
+      var cs = getComputedStyle(root);
+      var sp1 = cs.getPropertyValue('--sp-1').trim() || '(未加载)';
+      var loaded = sp1 === '4px';
+      probe.innerHTML =
+        '<b>运行时校验</b>  ' + (loaded ? '✓ polish.css 已加载' : '✗ polish.css 未生效') + '\n' +
+        '--sp-1          = ' + sp1 + '\n' +
+        '--fs-body       = ' + (cs.getPropertyValue('--fs-body').trim() || '(未设置)') + '\n' +
+        '.panel-tab transition = ' + styleOf('panel-tab', 'transitionDuration', 'button') + '\n' +
+        '.line-tag 文字色 = ' + styleOf('line-tag', 'color') + '   (应为 --text-3，非 --text-4)\n' +
+        '加载点动画 = ' + childStyleOf('thinking-dots', 'i', 'animationName') + ' · ' + childStyleOf('thinking-dots', 'i', 'animationDuration') + '\n' +
+        '.primary-btn 渐变 = ' + styleOf('primary-btn', 'backgroundImage', 'button') + '   (应为 none)\n' +
+        '--surface-void = ' + cs.getPropertyValue('--surface-void').trim() + '   (应为无彩 #0F0F0F)\n' +
+        'corner-shape   = ' + (getComputedStyle(document.querySelector('.sp-curve-box.is-g2')).getPropertyValue('corner-shape').trim() || '(不支持)') + '\n' +
+        'data-motion     = ' + (root.dataset.motion || 'system');
+    }
+    render();
+  })();
+</script>
+</body>
+</html>

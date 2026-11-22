@@ -1,0 +1,488 @@
+/* pristem UI polish layer — loaded AFTER styles.css.
+   Additive by design: nothing here changes layout geometry, mode semantics,
+   DOM structure, or the protocol. It supplies the missing halves of the
+   visual system: one interaction rhythm, one readable type scale, one
+   contrast floor, honest motion preferences, and calmer compositions on
+   the full-screen views. Keep rules here reversible and token-driven. */
+
+/* ------------------------------------------------------------------ 1 · tokens */
+/* The spacing scale itself is defined once, in styles.css. This layer only
+   adds the interaction/type/contrast variables the first pass was missing. */
+:root {
+  --t-press: 90ms;
+  --lh-body: 1.65;
+  --ring-soft: 0 0 0 4px rgba(232,232,232,.12);
+  --hair: rgba(232,232,232,.22);
+}
+
+/* ------------------------------------------------- 2 · one interaction rhythm */
+/* Zero specificity on purpose: any component that already declares its own
+   transition keeps it. Everything else stops snapping between states. */
+:where(
+  button:not(:disabled):not([aria-disabled='true']),
+  a, [role='tab'], [role='treeitem'], [role='menuitem'], summary
+) {
+  transition-property: background-color, border-color, color, box-shadow, opacity, filter;
+  transition-duration: var(--t-fast);
+  transition-timing-function: var(--ease-move);
+}
+
+/* A press must be visible on quiet surfaces too. filter is used instead of a
+   background override so it cannot fight the many component :active rules. */
+:where(
+  button:not(:disabled):not([aria-disabled='true']),
+  [role='tab'], [role='treeitem']
+):active { filter: brightness(.93); }
+
+/* Inputs whose ring is drawn on their container, plus the few that draw it
+   on themselves. Focus feedback should never be a hard cut. */
+:where(
+  .search-capsule, .settings-search, .path-dialog-input, .side-search input,
+  .git-commit textarea, .annotation-pop textarea, .summon input,
+  .welcome-clone-row input, .jump-line-row input, .palette-head input,
+  .term-tab-rename, .goal-input, .composer-box
+) {
+  transition: border-color var(--t-fast) var(--ease-move),
+              box-shadow var(--t-fast) var(--ease-move),
+              background-color var(--t-fast) var(--ease-move);
+}
+
+/* Scroll containers: no chained overscroll, no layout jump when the bar
+   appears, no rubber-banding on a desktop window. */
+:where(
+  .transcript, .goal-transcript, .tree-list, .output-panel, .problems-panel,
+  .side-list, .palette-list, .annotation-list, .settings-page, .path-dialog,
+  .term-views, .outline-pop
+) { overscroll-behavior: contain; }
+:where(.transcript, .goal-transcript, .tree-list, .side-list, .palette-list)
+  { scrollbar-gutter: stable; }
+
+/* ------------------------------------------------------- 3 · focus & feedback */
+/* Flat controls get a soft halo on top of the shared outline. Physical
+   buttons keep their own bevel-shadow, so they are deliberately excluded. */
+:where(
+  .icon-btn, .text-btn, .panel-tab, .term-tab, .editor-tab, .tree-item,
+  .settings-nav-item, .mode-menu button, .palette-list button, .session-pop-row,
+  .context-option, .outline-item, .search-hit, .goal-history-chip,
+  .goal-history-pop button, .goal-template, .tab-context-menu button,
+  .path-dialog-recent button, .wake-card-close, .foot-icon, .term-tab-add,
+  .tab-close, .search-clear, .activity-handle, .lang-switch
+):focus-visible { box-shadow: var(--ring-soft); }
+
+/* These three controls had no visible keyboard ring at all. The ring stays a
+   static white: focus indicators must not move while the user is navigating. */
+.palette-head input:focus-visible,
+.term-tab-rename:focus-visible,
+.settings-slider input[type='range']:focus-visible {
+  outline: 2px solid var(--beam);
+  outline-offset: 2px;
+}
+.settings-switch:focus-visible { outline: 2px solid var(--beam); outline-offset: 3px; }
+.settings-switch::after {
+  transition: transform var(--t-fast) var(--ease-move),
+              background-color var(--t-fast) var(--ease-move);
+}
+
+/* Disabled is a state, not a disappearance. WCAG exempts disabled controls
+   from contrast minima, but keeping them legible is still kinder. */
+button:disabled { opacity: .52; color: var(--text-3); }
+.primary-btn:disabled { opacity: .52; }
+.send-btn:disabled { opacity: .45; filter: grayscale(.35); }
+.composer-box:hover { border-color: var(--line-beam); }
+.text-btn { font-size: var(--fs-label); }
+
+/* ------------------------------------------------------------ 4 · contrast floor */
+/* --text-4 (3.63:1 on float) is decoration only: disabled, carets, rules.
+   Every string below carries meaning (labels, hints, timestamps, line
+   numbers), so it moves to a readable tier. On raised / float surfaces the
+   minimum is --text-2, per DESIGN §4.1. */
+.line-tag, .goal-line > span, .send-hint, .review-gutter,
+.exec-time, .partial-note, .tool-card-more, .welcome-recent li code,
+.handoff-step, .activity-handle, .sleep-briefing-hint,
+.settings-row.is-unavailable .settings-row-desc { color: var(--text-3); }
+
+.outline-line, .outline-pop-head, .palette-group, .palette-more,
+.session-pop-head, .menu-hint, .goal-history-empty, .settings-chip,
+.help-pop .help-foot, .summon .summon-foot { color: var(--text-2); }
+
+/* Long-form guidance is reading text, not decoration. */
+.empty-desc, .welcome-lead, .sleep-note, .goal-seed,
+.settings-row-desc, .seed-sub { color: var(--text-2); }
+
+/* ------------------------------------------------------ 5 · type consistency */
+/* A Chinese eyebrow must not be a 10px uppercased tracked-out micro label. */
+:root[lang="zh-CN"] .eyebrow { font-size: var(--fs-label); font-weight: 500; }
+:root[lang="zh-CN"] body { line-height: var(--lh-body); }
+
+.line, .line-answer p, .line-speech, .empty-desc,
+.wake-lead, .error-reason, .settings-row-desc, .welcome-lead, .sleep-note
+  { line-height: 1.7; }
+.line { font-size: var(--fs-body); }
+.settings-row-desc { font-size: var(--fs-label); }
+.goal-seed { font-size: var(--fs-body); max-width: 46ch; line-height: 1.75; }
+.empty-title { letter-spacing: .01em; }
+/* Balanced wrapping avoids a single character orphaning onto its own line,
+   which is especially visible on the quiet full-screen views. */
+.sleep-note { max-width: 34em; }
+.empty-title, .empty-desc, .goal-seed, .sleep-note,
+.deepsleep-sub, .wake-lead, .welcome-lead, .settings-row-desc
+  { text-wrap: balance; }
+
+/* --------------------------------------------- 6 · controls & component states */
+.title-mode, .project-chip, .session-switcher-btn {
+  transition: background-color var(--t-fast) var(--ease-move),
+              border-color var(--t-fast) var(--ease-move),
+              color var(--t-fast) var(--ease-move),
+              box-shadow var(--t-fast) var(--ease-move);
+}
+
+.settings-nav-item { border-radius: var(--r-2); padding: 0 var(--sp-3); }
+.settings-nav-item.is-active { box-shadow: inset 2px 0 0 var(--beam); }
+.settings-seg button { border-radius: var(--r-2); }
+.settings-seg button.is-on {
+  background: var(--beam); color: var(--beam-ink); font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,.28);
+}
+.settings-search { height: 32px; border-radius: var(--r-3); }
+.settings-close {
+  right: max(16px, calc((100vw - 880px) / 2 + 16px));
+  top: 60px;
+}
+
+/* Suggestions are buttons: give them a button's affordance instead of a
+   bare line of text. */
+.seed-line {
+  width: 100%; text-align: left;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line-hair); border-radius: var(--r-3);
+  background: var(--surface-inset);
+  transition: background-color var(--t-fast) var(--ease-move),
+              border-color var(--t-fast) var(--ease-move),
+              color var(--t-fast) var(--ease-move),
+              transform var(--t-press) var(--ease-move);
+}
+.seed-line:hover {
+  background: var(--surface-raised); border-color: var(--line-beam);
+  color: var(--text-1); transform: translateX(2px);
+}
+.seed-line:active { transform: translateX(0); }
+.transcript { gap: var(--sp-4); }
+.transcript.is-compact { gap: var(--sp-3); }
+.transcript-seed { gap: var(--sp-3); padding: var(--sp-3) var(--sp-1); }
+.seed-list { gap: var(--sp-2); }
+
+.empty-state { gap: var(--sp-3); }
+.empty-actions { gap: var(--sp-2); margin-top: var(--sp-2); }
+.error-card { border-radius: var(--r-4); }
+
+/* --------------------------------------------------------------- 7 · goal view */
+.goal-inner {
+  padding: clamp(28px, 5vh, 48px) 0 clamp(20px, 3vh, 32px);
+}
+.goal-session-strip { margin-bottom: var(--sp-4); }
+.goal-history-chip {
+  padding: var(--sp-3) var(--sp-6); border-radius: var(--r-3);
+  font-size: var(--fs-label); color: var(--text-2);
+  transition: color var(--t-fast) var(--ease-move),
+              box-shadow var(--t-fast) var(--ease-move),
+              background-color var(--t-fast) var(--ease-move);
+}
+.goal-history-chip:hover { color: var(--text-1); background: var(--beam-wash-2); }
+.goal-card {
+  height: 36px; gap: var(--sp-3); padding: 0 var(--sp-4);
+  border-radius: var(--r-4);
+  background: rgba(10,10,10,.72);
+  background: color-mix(in srgb, var(--surface-panel) 72%, transparent);
+  box-shadow: inset 0 0 0 1px var(--line-hair), inset 2px 0 0 var(--beam-dim);
+}
+.goal-card .eyebrow { color: var(--text-3); }
+.goal-empty { gap: var(--sp-6); padding: var(--sp-8) 0; }
+.goal-empty::before {
+  content: ''; width: 32px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-beam), transparent);
+  margin-bottom: var(--sp-1);
+}
+.goal-starters { gap: var(--sp-2); }
+.goal-template { padding: 0 var(--sp-4); letter-spacing: .01em; }
+.goal-input { padding: var(--sp-4) var(--sp-6) var(--sp-4) var(--sp-3); }
+
+/* The inset frame reads as a deliberate canvas instead of a stray empty box:
+   two restrained corner ticks, no extra chrome, no extra copy. */
+.view-frame::before, .view-frame::after {
+  content: ''; position: absolute; width: 16px; height: 16px;
+  border: 1px solid var(--hair); pointer-events: none;
+}
+.view-frame::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.view-frame::after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
+
+/* ---------------------------------------------------------- 8 · deepsleep view */
+/* The dimmed workbench is texture, not readable text. A soft veil stops the
+   editor from competing with the resting surface. */
+.deepsleep-layer {
+  background: radial-gradient(ellipse 70% 60% at 50% 42%,
+    rgba(14,14,14,.93) 0%, rgba(8,8,8,.965) 55%, rgba(0,0,0,.98) 100%);
+  -webkit-backdrop-filter: blur(7px) saturate(0);
+  backdrop-filter: blur(7px) saturate(0);
+}
+.deepsleep-center { max-width: 620px; padding: var(--sp-8) var(--sp-6); }
+.breath { margin-bottom: var(--sp-6); }
+.deepsleep-center h1 { margin: var(--sp-3) 0 var(--sp-2); }
+.deepsleep-sub { margin-bottom: var(--sp-4); color: var(--text-1); }
+.sleep-note { max-width: 46ch; }
+.sleep-meta { gap: var(--sp-6); margin-top: var(--sp-6); color: var(--text-2); }
+.sleep-briefing-hint {
+  margin: var(--sp-4) 0 0; font-size: var(--fs-label);
+  line-height: var(--lh-body); color: var(--text-3); letter-spacing: .02em;
+}
+.sleep-briefing-hint p { margin: 0; }
+.sleep-briefing-hint p + p { margin-top: var(--sp-1); color: var(--text-2); }
+.wake-empty { margin: var(--sp-6) 0; color: var(--text-2); font-size: var(--fs-body); }
+.wake-more { margin: calc(-1 * var(--sp-3)) 0 var(--sp-5); color: var(--text-2); font-size: var(--fs-label); }
+.deepsleep-actions { gap: var(--sp-3); margin-top: var(--sp-6); padding-bottom: var(--sp-8); }
+
+/* One focal point: when the briefing is up, the resting copy recedes. */
+.deepsleep-layer:has(.wake-overlay) .deepsleep-center {
+  opacity: .28;
+  transition: opacity var(--t-layout) var(--ease-move);
+}
+
+.wake-card { padding: var(--sp-6) var(--sp-8); }
+.wake-card h2 { margin: var(--sp-4) 0 var(--sp-2); }
+.wake-lead { font-size: var(--fs-body); }
+.wake-card ul { gap: var(--sp-3); margin-bottom: var(--sp-6); }
+.wake-card li {
+  font-size: var(--fs-body); color: var(--text-1);
+  gap: var(--sp-4); padding-top: var(--sp-3);
+}
+.wake-card li span { opacity: .82; }
+.wake-actions { padding-top: var(--sp-4); border-top: 1px solid var(--line-soft); }
+
+/* ---------------------------------------------------------- 9 · settings page */
+.settings-inner { padding: var(--sp-8) 0 var(--sp-12); gap: var(--sp-8); }
+.settings-nav { gap: var(--sp-1); }
+.settings-section { margin-bottom: var(--sp-8); }
+.settings-section-title { padding-bottom: var(--sp-3); margin-bottom: var(--sp-2); }
+.settings-row { min-height: 44px; padding: var(--sp-2) 0; gap: var(--sp-6); }
+.welcome-main { padding: var(--sp-12) var(--sp-8); }
+
+/* ------------------------------------------------------------ 10 · motion prefs */
+/* The app already writes these flags; honouring them is an accessibility fix,
+   not a new feature. Functional indicators stay visible, only movement goes. */
+:root[data-motion="reduced"] *,
+:root[data-motion="reduced"] *::before,
+:root[data-motion="reduced"] *::after {
+  animation-duration: .01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important;
+  scroll-behavior: auto !important;
+}
+:root[data-motion="reduced"] .sleep-log {
+  mask-image: none; -webkit-mask-image: none; max-height: none;
+}
+:root[data-motion="reduced"] .sleep-log p { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion="full"]) *,
+  :root:not([data-motion="full"]) *::before,
+  :root:not([data-motion="full"]) *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  :root:not([data-motion="full"]) .sleep-log {
+    mask-image: none; -webkit-mask-image: none; max-height: none;
+  }
+  :root:not([data-motion="full"]) .sleep-log p { opacity: 1; }
+}
+
+:root[data-pointer="off"] .empty-icon:hover,
+:root[data-pointer="off"] .welcome-action:hover,
+:root[data-pointer="off"] .goal-template:hover,
+:root[data-pointer="off"] .wake-card:hover,
+:root[data-pointer="off"] .handoff-card:hover,
+:root[data-pointer="off"] .brand-prism,
+:root[data-pointer="off"] .brand-mark:hover .brand-prism,
+:root[data-pointer="off"] .empty-icon:hover svg,
+:root[data-pointer="off"] .welcome-action:hover .welcome-action-icon svg {
+  transform: none !important;
+}
+:root[data-pointer="off"] .welcome-action:hover,
+:root[data-pointer="off"] .goal-template:hover { background-image: none; }
+:root[data-pointer="off"] .goal::after,
+:root[data-pointer="off"] .living-halo::after { transform: none !important; transition: none !important; }
+:root[data-living="off"] .living-halo,
+:root[data-living="off"] .ambient { animation-play-state: paused; }
+
+/* --------------------------------------------------------------- 11 · responsive */
+@media (max-height: 720px) {
+  .goal-inner { padding-top: var(--sp-4); padding-bottom: var(--sp-4); }
+  .goal-empty { padding: var(--sp-4) 0; gap: var(--sp-4); }
+  .deepsleep-center { padding: var(--sp-4); }
+  .breath { width: 48px; height: 48px; margin-bottom: var(--sp-3); }
+  .sleep-log { margin-top: var(--sp-3); max-height: 70px; }
+  .deepsleep-actions { margin-top: var(--sp-3); padding-bottom: var(--sp-4); }
+  .settings-inner { padding-top: var(--sp-4); }
+}
+@media (max-width: 1100px) {
+  .goal-inner { width: min(640px, calc(100% - 48px)); }
+  .wake-card { padding: var(--sp-4) var(--sp-6); }
+}
+@media (max-width: 760px) {
+  .goal-inner { width: calc(100% - 32px); }
+  .deepsleep-center { padding: var(--sp-3); }
+  .goal-card { padding: 0 var(--sp-3); }
+}
+/* Pointer-only: a mouse does not need 40px targets, a finger does. */
+@media (pointer: coarse) {
+  .icon-btn, .pane-head .icon-btn { width: 36px; height: 32px; }
+  .foot-icon, .term-tab-add, .wake-card-close, .settings-close {
+    min-width: 36px; min-height: 36px;
+  }
+  .tab-close { width: 28px; height: 28px; }
+  .settings-nav-item { height: 40px; }
+  .panel-tab, .editor-tab { min-height: 38px; }
+}
+
+/* ------------------------------------------- 11b · L0 modal isolation fallback */
+/* `inert` is Chrome 102+ / Safari 15.5+. Attribute selectors work everywhere,
+   so block pointer events even when the platform ignores the attribute; the
+   keyboard half is handled by installInertFallback() in capabilities.ts.
+   Native engines get the same behaviour from the attribute itself. */
+.workbench[inert] { pointer-events: none !important; user-select: none !important; }
+
+/* ---------------------------------------------- 12 · every loading state moves */
+/* 2.4s is deliberate: it reads as a calm presence, and it stays outside the
+   deepsleep invariant that forbids infinite animations under 2s. Opacity only
+   — no spatial movement, no spinner theatre. */
+@keyframes load-pulse {
+  0%, 100% { opacity: .28; }
+  50%      { opacity: 1; }
+}
+.thinking-dots i { animation: load-pulse 2.4s var(--ease-in-out) infinite; }
+.thinking-dots i:nth-child(2) { animation-delay: .24s; }
+.thinking-dots i:nth-child(3) { animation-delay: .48s; }
+.running-pill.is-working i,
+.running-pill.is-awaiting i { animation: load-pulse 2.4s var(--ease-in-out) infinite; }
+
+/* Every "loading" line gets a live dot instead of inert text. */
+.tree-loading::before,
+.settings-value.is-loading::before,
+.term-tab.is-starting::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; flex: none;
+  background: var(--beam-dim); margin-right: var(--sp-4);
+  animation: load-pulse 2.4s var(--ease-in-out) infinite;
+}
+.tree-loading { display: flex; align-items: center; padding-left: var(--sp-6); }
+.settings-value.is-loading { display: inline-flex; align-items: center; }
+.term-tab.is-starting::before { width: 5px; height: 5px; margin-right: 0; }
+
+/* Loading feedback is functional, so reduced motion keeps a slowed opacity
+   pulse rather than freezing the indicator into a static ornament. */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion="full"]) .thinking-dots i,
+  :root:not([data-motion="full"]) .running-pill.is-working,
+  :root:not([data-motion="full"]) .running-pill.is-awaiting,
+  :root:not([data-motion="full"]) .tree-loading::before,
+  :root:not([data-motion="full"]) .settings-value.is-loading::before,
+  :root:not([data-motion="full"]) .term-tab.is-starting::before {
+    animation: load-pulse 2.4s ease-in-out infinite !important;
+  }
+}
+:root[data-motion="reduced"] .thinking-dots i,
+:root[data-motion="reduced"] .running-pill.is-working,
+:root[data-motion="reduced"] .running-pill.is-awaiting,
+:root[data-motion="reduced"] .tree-loading::before,
+:root[data-motion="reduced"] .settings-value.is-loading::before,
+:root[data-motion="reduced"] .term-tab.is-starting::before {
+  animation: load-pulse 2.4s ease-in-out infinite !important;
+}
+
+/* --------------------------- 13 · quiet controls, no decorative click motion */
+/* A hover is a surface change. A press is a shade change. Nothing lifts,
+   scales, blooms, tilts or spins when clicked — that reads as decorative
+   "AI" motion rather than feedback about a state change. */
+.primary-btn, .send-btn {
+  background: var(--surface-raised);
+  background-image: none;
+  border-color: var(--line-strong);
+  color: var(--beam);
+  box-shadow: none;
+  transform: none;
+}
+.primary-btn:hover:not(:disabled), .send-btn:hover {
+  background: var(--surface-raised);
+  background-image: none;
+  border-color: var(--line-strong);
+  box-shadow: none;
+  transform: none;
+}
+.primary-btn:active:not(:disabled), .send-btn:active {
+  background: var(--surface-raised);
+  border-color: var(--line-strong);
+  box-shadow: none;
+  transform: none;
+}
+.primary-btn.small, .empty-actions .primary-btn { box-shadow: none; }
+
+.secondary-btn:hover, .mini-btn:hover,
+.secondary-btn:active, .mini-btn:active, .icon-btn:active,
+.goal-template:active, .welcome-action:active { transform: none; }
+.secondary-btn:active, .mini-btn:active { box-shadow: none; }
+
+/* No perspective tilt on larger surfaces. */
+.welcome-action:hover { transform: none; background-image: none; }
+.welcome-action:hover .welcome-action-icon,
+.welcome-action:hover .welcome-action-icon svg,
+.welcome-action:active .welcome-action-icon,
+.welcome-action:hover .si-pencil-body { transform: none; }
+.wake-card:hover, .handoff-card:hover { transform: none; }
+.brand-prism, .brand-mark:hover .brand-prism { transform: none; }
+
+/* Press-time icon gymnastics are the most obviously ornamental part. */
+.send-btn:hover .si-send-plane,
+.primary-btn:hover .si-send-plane,
+.send-btn:active .si-send-plane,
+.search-clear:active .si-back-body,
+.icon-btn:active .si-copy-front,
+.icon-btn:active .si-export-arrow,
+.icon-btn:active .si-gear-body { transform: none; }
+.icon-btn:active .si-refresh { animation: none; }
+
+/* ----------------------------- 14 · continuous curvature (G2 / squircle) */
+/* border-radius welds a straight edge to a quarter circle: positions and
+   tangents match (G1), but curvature jumps from 0 to 1/r at the join — the
+   faint crease that makes ordinary rounded cards feel machined. A
+   superellipse ramps the bend continuously (G2), which Figma exposes as
+   corner smoothing ~60%. Chromium 139+ ships corner-shape natively and this
+   WebView is 157, so this is real geometry, not a clip-path approximation:
+   borders, shadows and background clipping all stay intact. */
+@supports (corner-shape: squircle) {
+  /* Only the geometry changes. Every --r-* token keeps its declared value:
+     DESIGN_SYSTEM.md pins --r-1 (3px) and --r-3 (6px) in nested-radius
+     contracts, and the visual QA suite measures those boxes. A squircle at
+     the same radius reads a touch squarer — that is exactly the continuous
+     ramp, not a missing radius. */
+  *, *::before, *::after { corner-shape: superellipse(2); }
+
+  /* Circles and pills have no straight-edge → arc crease to remove; a
+     superellipse there only squares off their ends. Keep them round. */
+  .mode-glyph::before, .living-halo, .living-halo::before, .living-halo::after,
+  .tab-dot, .dirty-dot, .conn-dot, .provider-dot, .flow-dot, .exec-dot,
+  .running-pill i, .thinking-dots i, .term-pending, .handoff-step > span,
+  .breath, .breath::before, .settings-switch, .settings-switch::after,
+  .search-capsule, .new-messages, .context-chip, .goal-template,
+  .settings-chip, .wake-badge, .paused-pill, .proto-badge, .sample-tag,
+  .kind-tag, .goal-history-chip, .status-pill, .eye-toggle {
+    corner-shape: round;
+  }
+
+  /* Floating surfaces get a deeper squircle: at 8–12px the continuous ramp is
+     only legible if the bend is pushed further than a control's corner. */
+  .menubar-menu, .mode-menu, .tab-overflow-pop, .term-shell-pop, .composer-pop,
+  .tab-context-menu, .doc-pop, .conn-retry-menu, .help-pop, .annotation-pop,
+  .task-picker, .palette, .model-modal, .path-dialog, .save-prompt,
+  .toast-stack > *, .composer-box, .goal-input, .empty-icon {
+    corner-shape: superellipse(3);
+  }
+}
